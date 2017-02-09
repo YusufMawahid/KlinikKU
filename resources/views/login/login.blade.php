@@ -11,11 +11,11 @@
   <title>KlinikKU | Login </title>
 
 
-  <link href="/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/fonts/css/font-awesome.min.css" rel="stylesheet">
-  <link href="/css/animate.min.css" rel="stylesheet">
-  <link href="/css/custom.css" rel="stylesheet">
-  <link href="/css/icheck/flat/green.css" rel="stylesheet">
+  <link href="{{url('/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{url('/fonts/css/font-awesome.min.css')}}" rel="stylesheet">
+  <link href="{{url('/css/animate.min.css')}}" rel="stylesheet">
+  <link href="{{url('/css/custom.css')}}" rel="stylesheet">
+  <link href="{{url('/css/icheck/flat/green.css')}}" rel="stylesheet">
 
   <script src="/js/jquery.min.js"></script>
 
