@@ -46,11 +46,18 @@
             <div class="separator">
               <div>
                 <h1><i class="fa fa-hospital-o" style="font-size: 26px;"></i>    &nbsp; Welcome!</h1>
-
                 <p>©2016 All Rights Reserved. KlinikKU! is a Application. Privacy and Terms</p>
               </div>
             </div>
           </form>
+          <!-- BULLSHIT -->
+          <aside>Give me a side to side</aside>
+          <thead>
+            <tr>
+            <th></th>
+            </tr>
+          </thead>
+          <!-- THOKAYY -->
           <!-- form -->
         </section>
         <!-- content -->

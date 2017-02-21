@@ -28,7 +28,6 @@
                     </thead>
                          <?php $i = 1; ?>
                   @foreach ( $buku_register as $data)
-
                     <tbody>
                     <tr>
                         <td><?php  echo $i; $i+=1; ?></td>
@@ -37,8 +36,8 @@
                         <td>{{ $data->nama }}</td>
                         <td>{{ Carbon\Carbon::parse($data->tgl_lahir)->age }} Tahun </td>
                         <td>{{ $data->jenis_kelamin }}</td>
-                        <td>{{ $data->alamat }}</td>
-                        <td>#</td>
+                        <td>{{ $data->alamat }}</td>    
+                        <td>{{ $obat->nama_obat_merk}}</td>
                         <td>#</td>
                         <td>#</td>
                         <td>#</td> 

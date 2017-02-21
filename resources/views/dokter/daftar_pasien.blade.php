@@ -33,18 +33,18 @@
                       @foreach($pasien as $data)
                         <td><?php  echo $i; $i+=1; ?></td>
                         <td>{{ $data->nama }}</td>
-                        <td><a href="periksa_pasien/{{ $data->id }}"><i class="fa fa-stethoscope"></i> <span onclick="asign({{$data->id}})" data-toggle="modal" data-target=".bs-example-modal-sm">  Periksa</span></a></td>
+                        <td>
+                        <input type="hidden" id="anu" name="id">
+                        <a href="periksa_pasien/{{ $data->id }}"><i class="fa fa-stethoscope"></i> <span onclick="asign({{$data->id}})" data-toggle="modal" data-target=".bs-example-modal-sm">  Periksa</span></a></td>
                       </tr>
-                      @endforeach
+                      @endforeach 
                     </tbody>
                   </table>
 {{ $pasien->render() }}
                 </div>
               </div>
-            
             </form>
-
-            <form action="{{ url('selesai_periksa/'.$pasien) }}">
+            <form action="{{ url('selesai_periksa/'.$sudah_periksa) }}">
               <div class="x_panel">
                 <div class="x_title">
                   <h2>Pasien Telah Diperiksa</h2>
@@ -64,8 +64,8 @@
                      <?php $i = 1; ?>
                       @foreach($sudah_periksa as $data)
                         <td><?php  echo $i; $i+=1; ?></td>
-                        <td>{{ $data->nama }}</td>
-                        <td><a href="#/{{ $data->id }}"><i class="fa fa-trash"></i> Delete</a></td>
+                        <td>{{ $data->S }}</td>
+                        <td><a href="delete_pasien_inputkeluhan/{{ $data->id }}"><i class="fa fa-trash"></i> Delete</a></td>
                       </tr>
                       @endforeach
                     </tbody>
@@ -73,7 +73,7 @@
                 </div>
               </div>
             </form>
-<script>
+            <script>
     $(document).ready(function() {
       $(":input").inputmask();
     });

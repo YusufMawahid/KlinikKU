@@ -9,7 +9,6 @@
                 <div class="clearfix"></div>
               </div>
               <div class="x_content">
-                @foreach ($pasien as $data)
                 <p>
                 Nama &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:  {{ $data->nama }}
                 <br>
@@ -21,7 +20,6 @@
                 <br>
                 Pekerjaan &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ $data->pekerjaan }}
                 </p>
-                @endforeach
               </div>
             </div>
           </div>
@@ -62,9 +60,7 @@
 
                  <form action="{{ url('pemeriksaan_post' ) }}" id="form1" method="post" class="form-horizontal form-label-left input_mask" >
    {{ csrf_field() }}
-    
-                    
-  
+   <input type="hidden" name="id" value="{{ $data->id }}">
                 <div class="x_content">	
                     <div class="form-group">
 					<label class="control-label col-md-3 col-sm-1 col-xs-3">Keluhan Utama</label>
@@ -135,28 +131,28 @@
                   <br />
 
 				<label for="fullname">Obat 1</label>
-                        <select class="select2_multiple form-control" name="R" multiple="multiple">
+                        <select class="select2_multiples form-control" name="R" multiple="multiple">
                           @foreach ( $obat as $data)
                           <option> {{ $data->nama_obat_merk }}</option>
                           @endforeach 
                         </select>
 				
 				<label for="fullname">Obat 2</label>
-                    <select class="select2_multiple form-control" name="R" multiple="multiple">
+                    <select class="select2_multiples form-control" name="R" multiple="multiple">
                           @foreach ( $obat as $data)
                           <option> {{ $data->nama_obat_merk }}</option>
                           @endforeach
                         </select>
 				
 				<label for="fullname">Obat 3</label>
-                    <select class="select2_multiple form-control" name="R" multiple="multiple">
+                    <select class="select2_multiples form-control" name="R" multiple="multiple">
                           @foreach ( $obat as $data)
                           <option> {{ $data->nama_obat_merk }}</option>
                           @endforeach
                         </select>
 				
 				<label for="fullname">Obat 4</label>
-                    <select class="select2_multiple form-control" name="R" multiple="multiple">
+                    <select class="select2_multiples form-control" name="R" multiple="multiple">
                           @foreach ( $obat as $data)
                           <option> {{ $data->nama_obat_merk }}</option>
                           @endforeach
@@ -173,7 +169,6 @@
                         <button type="submit" class="btn btn-success">Simpan</button>
                       </div>
                     </div>
-
                  </div>
                  </div>
                  </div>
@@ -209,6 +204,22 @@ $(document).ready(function(){
       $(".select2_multiple").select2({
         maximumSelectionLength: 5,
         placeholder: "Maksimal 5 Tarif / Tindakan",
+        allowClear: true
+      });
+    });
+  </script>
+
+
+<script>
+    $(document).ready(function() {
+      $(".select2_single").select2({
+        placeholder: "Select a state",
+        allowClear: true
+      });
+      $(".select2_group").select2({});
+      $(".select2_multiples").select2({
+        maximumSelectionLength: 5,
+        placeholder: "Maksimal 5 Obat ",
         allowClear: true
       });
     });
@@ -266,6 +277,8 @@ if (bmi<18.5){
   document.getElementById("text").innerHTML=("Pembunuhan!");
 }
 }
-
+function asign(an) {
+              $("#anu").val(an);
+            }
 </script>
 @endsection

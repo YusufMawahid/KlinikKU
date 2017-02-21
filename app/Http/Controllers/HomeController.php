@@ -25,19 +25,24 @@ class HomeController extends Controller
 {
     public function master_view()
     {
-    	if (Auth::user()->roles != "master") {
-			return redirect('dokter');
-		}
-    // $request = count(RequestBarang::withTrashed()->get());
-    //   $waitingRequest = count(RequestBarang::withTrashed()->where('status', '0')->get());
-    //   $approvedRequest = count(RequestBarang::withTrashed()->where('status', '1')->get());
-    //   $rejectedRequest = count(RequestBarang::withTrashed()->where('status', '2')->get());
-    //   return view('role.manager.dashboard')->with('allRequest', $request)
-    //                                         ->with('waitingRequest', $waitingRequest)
-    //                                         ->with('approvedRequest', $approvedRequest)
-    //                                         ->with('rejectedRequest', $rejectedRequest);
-    return view('master.dashboard');
-    // ->with('admin',$admin)->with('master',$master);
+        if (Auth::user()->roles != "master") {
+            return redirect('dokter');
+        }
+    $obat = count(Obat::get());
+    $tarif = count(Tarif::get());
+    $master = count(User::where('roles','master')->get());
+    $dokter = count(User::where('roles','dokter')->get());
+    $kasir = count(User::where('roles','kasir')->get());
+    $pasien = count(User::where('roles','pasien')->get());
+
+      return view('master.beranda')->with('obat', $obat)
+                                     ->with('tarif', $tarif)
+                                     ->with('master', $master)
+                                     ->with('kasir', $kasir)
+                                     ->with('pasien', $pasien)
+                                     ->with('dokter', $dokter);
+
+
     }
 
     public function kasir_view()
@@ -67,7 +72,14 @@ class HomeController extends Controller
     {   
         // $obat = array('_');
         // print_r(str_replace("_", "", $obat[0]));
-        return view('master.obat.stok',['obat' => Obat::paginate(10)]);
+        
+        return view('master.obat.stok',['obat' => Obat::paginate(10),
+                                        'tarif' => '', 
+                                        'master' => '', 
+                                        'dokter' => '',
+                                        'kasir' => '',
+                                        'pasien' => '']);
+
         
     }
 
@@ -150,8 +162,6 @@ class HomeController extends Controller
 
     public function tambah_pasien(Request $r)
     {
-        // $user = User::where('medrec');
-        // dd($user);
         $pasien = new User;
         $pasien->medrec = $r->input('medrec');
         $pasien->nama = $r->input('nama');
@@ -223,9 +233,15 @@ class HomeController extends Controller
     public function buku_register()
     {
         $user = User::where('roles',NULL)->paginate(10);
-        $inputkeluhan = InputKeluhan::paginate(10);
+        $inputkeluhan = InputKeluhan::where('tindakan','!=',NULL)->paginate(10);
+        $obat = Obat::where('nama_obat_merk','!=',NULL)->first();
+        $tarif = Tarif::where('dokter','!=',NULL)->paginate(10);
+        $jumlah_total = Tarif::where('jumlah_total','!=',NULL)->paginate(10);
         return view('master.pasien.buku_register',['buku_register'=>$user,
-                                                    'input_keluhan' => $inputkeluhan]);
+                                                   'input_keluhan' => $inputkeluhan,
+                                                   'obat' => $obat,
+                                                   'tarif' => $tarif,
+                                                   'jumlah_total' => $jumlah_total]);
     }
 
     public function mencari_obat(Request $r)
@@ -262,7 +278,11 @@ class HomeController extends Controller
 
     public function pemeriksaan_post(Request $r)
     {
+        $pasien = User::where('roles','pasien')
+                        ->where('nama','!=', NULL)
+                        ->where('id', $r->input('id'))->first();
         $input_keluhan = new InputKeluhan;
+        $input_keluhan->S = $pasien->nama;
         $input_keluhan->N = "sudah_periksa";
         $input_keluhan->N = $r->N;
         $input_keluhan->R = $r->R;
@@ -273,27 +293,27 @@ class HomeController extends Controller
         $input_keluhan->tindakan = $r->tindakan;
         $input_keluhan->saran = $r->saran;
         $input_keluhan->save();
-        // return redirect('selesai_periksa'.$id);
-        return redirect(url('selesai_periksa'));
+        $pasien->delete();
+        return redirect('dokter');
     }
-
-    public function user()
-    {
-        $user = User::where('medrec','!=', NULL)->where('username', '!=', NULL)->paginate(10);
-        return view('master.user.user',['user'=>$user]);
-    }
-
+    
     public function pemeriksaan_get($id)
     {
-    $pasien = User::where('roles','pasien')->where('id',$id)->paginate(10);
+    $pasien = User::where('roles','pasien')->where('id',$id)->first();
     $pemeriksaan = InputKeluhan::paginate(10);
     $tarif = Tarif::paginate(10);
     $obat = Obat::orderBy('nama_obat_merk','asc')->get();
     return view('dokter.pemeriksaan',['inputkeluhan'=> $pemeriksaan,
                                       'tarif' => $tarif,
-                                      'pasien' => $pasien,
+                                      'data' => $pasien,
                                       'obat' => $obat]);
     }
+    public function user()
+    {
+        $user = User::where('medrec','!=', NULL)->where('username', '!=', NULL)->paginate(10);
+        return view('master.user.user',['user'=>$user]);
+    }
+    
 
     public function dashboard($id)
     {
@@ -420,36 +440,13 @@ class HomeController extends Controller
         if (Auth::user()->roles != "dokter") {
             return redirect('dokter');
         }
-
-
     $pemeriksaan = InputKeluhan::paginate(10);
     $persalinan = Persalinan::paginate(10);
     $kalender_kb = KalenderKB::paginate(10);
     $pasien = User::where('roles','pasien')->where('id','!=',NULL)->paginate(10);
-    // $selesai_periksa = User::where('username',NULL)->where('roles','pasien')
-    //                 ->where($pasien)
-    //                 ->where($pemeriksaan, $id)
-    //                 ->where($persalinan, $id)
-    //                 ->where($kalender_kb, $id)->paginate(10);
-    $sudah_periksa = InputKeluhan::where('N','sudah_periksa')->paginate(10);
-    return view('dokter.daftar_pasien',['inputkeluhan'=> $pemeriksaan,
-                                      'tarif' => Tarif::paginate(10),
-                                      'pasien'=> $pasien,
-                                      'pemeriksaan'=> $pemeriksaan,
-                                      'persalinan' => $persalinan,
-                                      'kalender_kb' => $kalender_kb,
-                                      'sudah_periksa' => $sudah_periksa]);
-                                      // 'selesai_periksa'=> $selesai_periksa
-    }
-
-    public function selesai_periksa()
-    {
-    $pemeriksaan = InputKeluhan::where('N','sudah_periksa')->paginate(10);
-    $persalinan = Persalinan::paginate(10);
-    $kalender_kb = KalenderKB::paginate(10);
-    $pasien = User::where('roles','pasien')->where('id','!=',NULL)->paginate(10);
     $sudah_periksa = InputKeluhan::where('N','sudah_periksa')
-                    ->where('id','!=',NULL)->paginate(10);
+                    ->where('S','!=',NULL)
+                    ->where('id','!=',NULL)->paginate(5);
     return view('dokter.daftar_pasien',['inputkeluhan'=> $pemeriksaan,
                                       'tarif' => Tarif::paginate(10),
                                       'pasien'=> $pasien,
@@ -457,11 +454,16 @@ class HomeController extends Controller
                                       'persalinan' => $persalinan,
                                       'kalender_kb' => $kalender_kb,
                                       'sudah_periksa' => $sudah_periksa]);
-                                      // 'selesai_periksa'=> $selesai_periksa
     }
+    
     public function periksa()
     {
     $antrian_pasien_kasir = User::where('username',NULL)->where('roles','pasien')->paginate(10);
     }
+
+    public function delete_pasien_keluhan($id)
+    {
+        InputKeluhan::destroy($id); 
+        return redirect('dokter');
+    }
 }
-    
