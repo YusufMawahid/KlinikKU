@@ -38,6 +38,7 @@ Route::get('list_tarif','HomeController@list_tarif');
 Route::get('list_tarif_dokter','HomeController@list_tarif_dokter');
 
 // DOKTER
+Route::post('posttambah_obat/{id}','HomeController@posttambah_obat');
 Route::get('delete_pasien_inputkeluhan/{id}','HomeController@delete_pasien_inputkeluhan');
 Route::get('dashboard/{id}','HomeController@dashboard');
 Route::get('daftar_pasien','HomeController@daftar_pasien');
