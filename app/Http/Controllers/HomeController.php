@@ -233,7 +233,7 @@ class HomeController extends Controller
     public function buku_register()
     {
         $user = User::where('roles',NULL)->paginate(10);
-        $inputkeluhan = InputKeluhan::where('tindakan','!=',NULL)->paginate(10);
+        $inputkeluhan = InputKeluhan::paginate(10);
         $obat = Obat::where('nama_obat_merk','!=',NULL)->first();
         $tarif = Tarif::where('dokter','!=',NULL)->paginate(10);
         $jumlah_total = Tarif::where('jumlah_total','!=',NULL)->paginate(10);
